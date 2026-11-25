@@ -1,1 +1,154 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
+#define MAX 200
+
+void readString(char str[], int size) {
+    fgets(str, size, stdin);
+    str[strcspn(str, "\n")] = '\0'; // Remove trailing newline character
+}
+
+void reverseString(char str[]) {
+    int left = 0;
+    int right = strlen(str) - 1;
+    char temp;
+    while (left < right) {
+        temp = str[left];
+        str[left] = str[right];
+        str[right] = temp;
+        left++;
+        right--;
+    }
+}
+
+int main() {
+    int choice;
+    char str1[MAX], str2[MAX], temp[MAX];
+
+    while (1) {
+        printf("\n========================================\n");
+        printf("        STRING OPERATIONS MENU          \n");
+        printf("========================================\n");
+        printf("1. Find String Length (strlen)\n");
+        printf("2. Copy String (strcpy)\n");
+        printf("3. Concatenate Two Strings (strcat)\n");
+        printf("4. Compare Two Strings (strcmp)\n");
+        printf("5. Reverse a String\n");
+        printf("6. Convert to Uppercase\n");
+        printf("7. Convert to Lowercase\n");
+        printf("8. Check Palindrome\n");
+        printf("9. Find Substring (strstr)\n");
+        printf("10. Exit\n");
+        printf("========================================\n");
+        printf("Enter your choice (1-10): ");
+        
+        if (scanf("%d", &choice) != 1) {
+            printf("Invalid input! Please enter a number.\n");
+            while (getchar() != '\n'); // Clear invalid input buffer
+            continue;
+        }
+        getchar(); // Consume the newline left by scanf
+
+        switch (choice) {
+            case 1:
+                printf("Enter a string: ");
+                readString(str1, MAX);
+                printf("Length of the string: %zu\n", strlen(str1));
+                break;
+
+            case 2:
+                printf("Enter source string: ");
+                readString(str1, MAX);
+                strcpy(str2, str1);
+                printf("Copied string: \"%s\"\n", str2);
+                break;
+
+            case 3:
+                printf("Enter first string: ");
+                readString(str1, MAX);
+                printf("Enter second string: ");
+                readString(str2, MAX);
+                if (strlen(str1) + strlen(str2) < MAX) {
+                    strcat(str1, str2);
+                    printf("Concatenated string: \"%s\"\n", str1);
+                } else {
+                    printf("Error: Combined string exceeds buffer size!\n");
+                }
+                break;
+
+            case 4:
+                printf("Enter first string: ");
+                readString(str1, MAX);
+                printf("Enter second string: ");
+                readString(str2, MAX);
+                int cmp = strcmp(str1, str2);
+                if (cmp == 0) {
+                    printf("Result: Both strings are EQUAL.\n");
+                } else if (cmp < 0) {
+                    printf("Result: First string is lexicographically SMALLER than second.\n");
+                } else {
+                    printf("Result: First string is lexicographically GREATER than second.\n");
+                }
+                break;
+
+            case 5:
+                printf("Enter a string to reverse: ");
+                readString(str1, MAX);
+                reverseString(str1);
+                printf("Reversed string: \"%s\"\n", str1);
+                break;
+
+            case 6:
+                printf("Enter a string: ");
+                readString(str1, MAX);
+                for (int i = 0; str1[i] != '\0'; i++) {
+                    str1[i] = toupper((unsigned char)str1[i]);
+                }
+                printf("Uppercase string: \"%s\"\n", str1);
+                break;
+
+            case 7:
+                printf("Enter a string: ");
+                readString(str1, MAX);
+                for (int i = 0; str1[i] != '\0'; i++) {
+                    str1[i] = tolower((unsigned char)str1[i]);
+                }
+                printf("Lowercase string: \"%s\"\n", str1);
+                break;
+
+            case 8:
+                printf("Enter a string: ");
+                readString(str1, MAX);
+                strcpy(temp, str1);
+                reverseString(temp);
+                if (strcmp(str1, temp) == 0) {
+                    printf("Result: \"%s\" IS a palindrome.\n", str1);
+                } else {
+                    printf("Result: \"%s\" is NOT a palindrome.\n", str1);
+                }
+                break;
+
+            case 9:
+                printf("Enter main string: ");
+                readString(str1, MAX);
+                printf("Enter substring to search: ");
+                readString(str2, MAX);
+                char *pos = strstr(str1, str2);
+                if (pos != NULL) {
+                    printf("Substring found at index: %ld\n", pos - str1);
+                } else {
+                    printf("Substring NOT found.\n");
+                }
+                break;
+
+            case 10:
+                printf("Exiting program. Goodbye!\n");
+                return 0;
+
+            default:
+                printf("Invalid choice! Please select between 1 and 10.\n");
+        }
+    }
+    return 0;
+}
